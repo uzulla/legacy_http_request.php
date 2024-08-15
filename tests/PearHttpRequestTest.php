@@ -41,6 +41,17 @@ class PearHttpRequestTest extends TestCase
         $this->assertStringContainsString('<title>phpinfo()</title>', $this->request->getResponseBody());
     }
 
+    public function testSetUrlWithConstructor()
+    {
+        $this->request = new PearHttpRequest(self::TEST_SERVER_URL);
+
+        $result = $this->request->sendRequest();
+
+        $this->assertTrue($result);
+        $this->assertEquals(200, $this->request->getResponseCode());
+        $this->assertStringContainsString('<title>phpinfo()</title>', $this->request->getResponseBody());
+    }
+
     public function testAddQueryString()
     {
         $this->request = new PearHttpRequest();

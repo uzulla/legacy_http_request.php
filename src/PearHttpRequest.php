@@ -5,14 +5,12 @@ declare(strict_types=1);
 namespace Uzulla\ForLegacy\HttpRequest;
 
 use GuzzleHttp\Client;
-use GuzzleHttp\Cookie\SetCookie;
 use GuzzleHttp\Exception\RequestException;
-use InvalidArgumentException;
 use LogicException;
 
 class PearHttpRequest implements PearHttpRequestInterface
 {
-    /** @var Client  */
+    /** @var Client */
     private $client;
     private $response;
     private $url;
@@ -28,8 +26,14 @@ class PearHttpRequest implements PearHttpRequestInterface
     private $basicAuthPassword;
     private $body;
 
-    public function __construct()
+    public function __construct($url = '', $params = [])
     {
+        if (strlen($url) > 0) {
+            $this->setURL($url);
+        }
+        if (count($params) > 0) {
+            throw new LogicException('Not implemented yet');
+        }
     }
 
     public function setURL($url)
@@ -87,7 +91,7 @@ class PearHttpRequest implements PearHttpRequestInterface
             }
         }
 
-        if(isset($this->basicAuthUsername)) {
+        if (isset($this->basicAuthUsername)) {
             $this->options = array_merge([
                 'auth' => [
                     $this->basicAuthUsername,
@@ -137,7 +141,7 @@ class PearHttpRequest implements PearHttpRequestInterface
 
     public function setBasicAuth($user, $pass)
     {
-        $this->basicAuthUsername= $user;
+        $this->basicAuthUsername = $user;
         $this->basicAuthPassword = $pass;
     }
 
