@@ -31,7 +31,7 @@ class PearHttpRequestTest extends TestCase
         $this->request = new PearHttpRequest();
 
         $this->request->setURL(self::TEST_SERVER_URL);
-        $this->request->setMethod('GET');
+        $this->request->setMethod(PearHttpRequest::HTTP_REQUEST_METHOD_GET);
         $this->request->addHeader('User-Agent', 'TestAgent');
 
         $result = $this->request->sendRequest();
@@ -57,7 +57,7 @@ class PearHttpRequestTest extends TestCase
         $this->request = new PearHttpRequest();
 
         $this->request->setURL(self::TEST_SERVER_URL);
-        $this->request->setMethod('GET');
+        $this->request->setMethod(PearHttpRequest::HTTP_REQUEST_METHOD_GET);
         $this->request->addHeader('User-Agent', 'TestAgent');
         $this->request->addQueryString('foo', 'bar');
         $this->request->addQueryString('baz', 'qux', true);
@@ -74,7 +74,7 @@ class PearHttpRequestTest extends TestCase
         $this->request = new PearHttpRequest();
 
         $this->request->setURL(self::TEST_SERVER_URL);
-        $this->request->setMethod('POST');
+        $this->request->setMethod(PearHttpRequest::HTTP_REQUEST_METHOD_POST);
         $this->request->addHeader('User-Agent', 'TestAgent');
         $this->request->addPostData('foo', 'bar');
         $this->request->addPostData('baz', 'qux', true);
@@ -91,7 +91,7 @@ class PearHttpRequestTest extends TestCase
         $this->request = new PearHttpRequest();
 
         $this->request->setURL(self::TEST_SERVER_URL);
-        $this->request->setMethod('GET');
+        $this->request->setMethod(PearHttpRequest::HTTP_REQUEST_METHOD_GET);
         $this->request->addHeader('User-Agent', 'TestAgent');
         $this->request->setBasicAuth('test_basic_auth_user', 'test_basic_auth_pass');
 
@@ -106,7 +106,7 @@ class PearHttpRequestTest extends TestCase
         $this->request = new PearHttpRequest();
 
         $this->request->setURL(self::TEST_SERVER_URL);
-        $this->request->setMethod('POST');
+        $this->request->setMethod(PearHttpRequest::HTTP_REQUEST_METHOD_POST);
         $this->request->addHeader('User-Agent', 'TestAgent');
         $this->request->addHeader('Content-Type', 'application/x-www-form-urlencoded');
         $this->request->setBody('this_is=raw_body');
@@ -121,7 +121,7 @@ class PearHttpRequestTest extends TestCase
         $this->request = new PearHttpRequest();
 
         $this->request->setURL(self::TEST_SERVER_URL);
-        $this->request->setMethod('POST');
+        $this->request->setMethod(PearHttpRequest::HTTP_REQUEST_METHOD_POST);
         $this->request->addHeader('User-Agent', 'TestAgent');
         $this->request->addRawPostData('this_is=raw_body');
 

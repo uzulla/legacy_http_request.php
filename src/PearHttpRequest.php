@@ -10,6 +10,14 @@ use LogicException;
 
 class PearHttpRequest implements PearHttpRequestInterface
 {
+    const HTTP_REQUEST_METHOD_GET = 'GET';
+    const HTTP_REQUEST_METHOD_HEAD = 'HEAD';
+    const HTTP_REQUEST_METHOD_POST = 'POST';
+    const HTTP_REQUEST_METHOD_PUT = 'PUT';
+    const HTTP_REQUEST_METHOD_DELETE = 'DELETE';
+    const HTTP_REQUEST_METHOD_OPTIONS = 'OPTIONS';
+    const HTTP_REQUEST_METHOD_TRACE = 'TRACE';
+
     /** @var Client */
     private $client;
     private $response;
@@ -71,7 +79,8 @@ class PearHttpRequest implements PearHttpRequestInterface
         $this->postData[$name] = $preencoded ? $value : urlencode($value);
     }
 
-    public function addRawPostData($postdata, $preencoded = true){
+    public function addRawPostData($postdata, $preencoded = true)
+    {
         $this->body = $preencoded ? $postdata : urlencode($postdata);
     }
 
@@ -91,9 +100,9 @@ class PearHttpRequest implements PearHttpRequestInterface
             if (!empty($this->postData)) {
                 $this->options['form_params'] = $this->postData;
             } elseif (isset($this->body)) {
-                if(!isset($this->headers['Content-Type'])){
+                if (!isset($this->headers['Content-Type'])) {
                     $this->options['headers'] = array_merge(
-                        // POSTでContent-Type未指定の場合はapplication/x-www-form-urlencodedにFallbackする
+                    // POSTでContent-Type未指定の場合はapplication/x-www-form-urlencodedにFallbackする
                         ['Content-Type' => 'application/x-www-form-urlencoded'],
                         $this->options['headers']
                     );
