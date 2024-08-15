@@ -12,6 +12,8 @@ It is not for new projects, I recommend to use well-maintained modern libraries 
 ## CAUTION
 
 - This library is NOT perfect compatibility with PEAR::HTTP_Request.
+- Many methods are not implemented yet.
+- ex: Error handling is different (PEAR::Error is not implemented.), also Http method constants are defined as class constants.
 
 ## Requirements
 
