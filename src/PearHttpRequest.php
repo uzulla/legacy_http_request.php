@@ -89,37 +89,10 @@ class PearHttpRequest implements PearHttpRequestInterface
         $this->body = $body;
     }
 
+
     public function sendRequest($saveBody = true)
     {
-        $this->options = array_merge([
-            'headers' => $this->headers,
-            'query' => $this->queryParams,
-        ], $this->options);
-
-        if ($this->method === 'POST' || $this->method === 'PUT') {
-            if (!empty($this->postData)) {
-                $this->options['form_params'] = $this->postData;
-            } elseif (isset($this->body)) {
-                if (!isset($this->headers['Content-Type'])) {
-                    $this->options['headers'] = array_merge(
-                    // POSTでContent-Type未指定の場合はapplication/x-www-form-urlencodedにFallbackする
-                        ['Content-Type' => 'application/x-www-form-urlencoded'],
-                        $this->options['headers']
-                    );
-                }
-                $this->options['body'] = $this->body;
-            }
-        }
-
-        if (isset($this->basicAuthUsername)) {
-            $this->options = array_merge([
-                'auth' => [
-                    $this->basicAuthUsername,
-                    $this->basicAuthPassword,
-                    'basic'
-                ]
-            ], $this->options);
-        }
+        $this->prepareOptions();
 
         try {
             $this->client = new Client();
@@ -128,6 +101,53 @@ class PearHttpRequest implements PearHttpRequestInterface
         } catch (RequestException $e) {
             $this->response = $e->getResponse();
             return false;
+        }
+    }
+
+    private function prepareOptions()
+    {
+        $this->options = array_merge([
+            'headers' => $this->headers,
+            'query' => $this->queryParams,
+        ], $this->options);
+
+        $this->prepareBody();
+        $this->prepareAuth();
+    }
+
+    private function prepareBody()
+    {
+        if ($this->method === 'POST' || $this->method === 'PUT') {
+            $this->setDefaultContentType();
+
+            if (!empty($this->postData)) {
+                $this->options['form_params'] = $this->postData;
+            } elseif (isset($this->body)) {
+                $this->options['body'] = $this->body;
+            }
+        }
+    }
+
+    private function setDefaultContentType()
+    {
+        if (!isset($this->headers['Content-Type'])) {
+            $this->options['headers'] = array_merge(
+                ['Content-Type' => 'application/x-www-form-urlencoded'],
+                $this->options['headers']
+            );
+        }
+    }
+
+    private function prepareAuth()
+    {
+        if (isset($this->basicAuthUsername)) {
+            $this->options = array_merge([
+                'auth' => [
+                    $this->basicAuthUsername,
+                    $this->basicAuthPassword,
+                    'basic'
+                ]
+            ], $this->options);
         }
     }
 
@@ -165,6 +185,30 @@ class PearHttpRequest implements PearHttpRequestInterface
         $this->basicAuthPassword = $pass;
     }
 
+    public function getResponseReason()
+    {
+        $response = $this->client->getResponse();
+        return $response->getReasonPhrase();
+    }
+
+    public function getResponseCookies()
+    {
+        $response = $this->client->getResponse();
+        $cookieJar = $response->getCookies();
+        $cookies = [];
+
+        foreach ($cookieJar as $cookie) {
+            $cookies[$cookie->getName()] = $cookie->getValue();
+        }
+
+        return $cookies;
+    }
+
+    public function clearPostData()
+    {
+        $this->postData = [];
+    }
+
     public function setHttpVer($http)
     {
         throw new LogicException('Not implemented yet');
@@ -185,25 +229,6 @@ class PearHttpRequest implements PearHttpRequestInterface
         throw new LogicException('Not implemented yet');
     }
 
-    public function getResponseReason()
-    {
-        $response = $this->client->getResponse();
-        return $response->getReasonPhrase();
-    }
-
-    public function getResponseCookies()
-    {
-        $response = $this->client->getResponse();
-        $cookieJar = $response->getCookies();
-        $cookies = [];
-
-        foreach ($cookieJar as $cookie) {
-            $cookies[$cookie->getName()] = $cookie->getValue();
-        }
-
-        return $cookies;
-    }
-
     public function disconnect()
     {
         throw new LogicException('Not implemented yet');
@@ -215,6 +240,16 @@ class PearHttpRequest implements PearHttpRequestInterface
     }
 
     public function detach(&$listener)
+    {
+        throw new LogicException('Not implemented yet');
+    }
+
+    public function reset($url, $params = array())
+    {
+        throw new LogicException('Not implemented yet');
+    }
+
+    public function clearCookies()
     {
         throw new LogicException('Not implemented yet');
     }

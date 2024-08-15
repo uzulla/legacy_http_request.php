@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Uzulla\ForLegacy\HttpRequest\Tests;
 
 use PHPUnit\Framework\TestCase;
@@ -7,24 +9,11 @@ use Uzulla\ForLegacy\HttpRequest\PearHttpRequest;
 
 class PearHttpRequestTest extends TestCase
 {
+    const TEST_SERVER_URL = 'http://127.0.0.1:8080/';
     /** @var PearHttpRequest */
     protected $request;
-
     /** @var TestHttpServer */
     protected $testServer;
-
-    const TEST_SERVER_URL = 'http://127.0.0.1:8080/';
-
-    protected function setUp(): void
-    {
-        $this->testServer = new TestHttpServer();
-        $this->testServer->start();
-    }
-
-    protected function tearDown(): void
-    {
-        $this->testServer = null;
-    }
 
     public function testSendRequest()
     {
@@ -58,7 +47,6 @@ class PearHttpRequestTest extends TestCase
 
         $this->request->setURL(self::TEST_SERVER_URL);
         $this->request->setMethod(PearHttpRequest::HTTP_REQUEST_METHOD_GET);
-        $this->request->addHeader('User-Agent', 'TestAgent');
         $this->request->addQueryString('foo', 'bar');
         $this->request->addQueryString('baz', 'qux', true);
 
@@ -75,7 +63,6 @@ class PearHttpRequestTest extends TestCase
 
         $this->request->setURL(self::TEST_SERVER_URL);
         $this->request->setMethod(PearHttpRequest::HTTP_REQUEST_METHOD_POST);
-        $this->request->addHeader('User-Agent', 'TestAgent');
         $this->request->addPostData('foo', 'bar');
         $this->request->addPostData('baz', 'qux', true);
 
@@ -92,7 +79,6 @@ class PearHttpRequestTest extends TestCase
 
         $this->request->setURL(self::TEST_SERVER_URL);
         $this->request->setMethod(PearHttpRequest::HTTP_REQUEST_METHOD_GET);
-        $this->request->addHeader('User-Agent', 'TestAgent');
         $this->request->setBasicAuth('test_basic_auth_user', 'test_basic_auth_pass');
 
         $this->request->sendRequest();
@@ -107,8 +93,6 @@ class PearHttpRequestTest extends TestCase
 
         $this->request->setURL(self::TEST_SERVER_URL);
         $this->request->setMethod(PearHttpRequest::HTTP_REQUEST_METHOD_POST);
-        $this->request->addHeader('User-Agent', 'TestAgent');
-        $this->request->addHeader('Content-Type', 'application/x-www-form-urlencoded');
         $this->request->setBody('this_is=raw_body');
 
         $this->request->sendRequest();
@@ -122,11 +106,21 @@ class PearHttpRequestTest extends TestCase
 
         $this->request->setURL(self::TEST_SERVER_URL);
         $this->request->setMethod(PearHttpRequest::HTTP_REQUEST_METHOD_POST);
-        $this->request->addHeader('User-Agent', 'TestAgent');
         $this->request->addRawPostData('this_is=raw_body');
 
         $this->request->sendRequest();
 
         $this->assertStringContainsString('<tr><td class="e">$_POST[\'this_is\']</td><td class="v">raw_body</td></tr>', $this->request->getResponseBody());
+    }
+
+    protected function setUp(): void
+    {
+        $this->testServer = new TestHttpServer();
+        $this->testServer->start();
+    }
+
+    protected function tearDown(): void
+    {
+        $this->testServer = null;
     }
 }
