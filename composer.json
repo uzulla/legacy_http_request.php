@@ -15,7 +15,7 @@
         }
     },
     "support": {
-        "source": "https://github.com/uzulla/http_request_guzzle_backed"
+        "source": "https://github.com/uzulla/legacy_http_request.php"
     },
     "type": "library",
     "require-dev": {
