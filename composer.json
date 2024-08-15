@@ -1,0 +1,29 @@
+{
+    "name": "uzulla/legacy_http_request",
+    "description": "HTTP_Request library for legacy PHP.",
+    "license": "MIT",
+    "authors": [
+        {
+            "email": "zishida@gmail.com",
+            "name": "uzulla"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Uzulla\\ForLegacy\\HttpRequest\\": "src/",
+            "Uzulla\\ForLegacy\\HttpRequest\\Tests\\": "tests/"
+        }
+    },
+    "support": {
+        "source": "https://github.com/uzulla/http_request_guzzle_backed"
+    },
+    "type": "library",
+    "require-dev": {
+        "phpunit/phpunit": "^8.5.0"
+    },
+    "require": {
+        "php": ">=7.2.0",
+        "guzzlehttp/guzzle": "^6.5.0",
+        "ext-posix": "*"
+    }
+}
