@@ -115,4 +115,18 @@ class PearHttpRequestTest extends TestCase
 
         $this->assertStringContainsString('<tr><td class="e">$_POST[\'this_is\']</td><td class="v">raw_body</td></tr>', $this->request->getResponseBody());
     }
+
+    public function testAddRawPostData()
+    {
+        $this->request = new PearHttpRequest();
+
+        $this->request->setURL(self::TEST_SERVER_URL);
+        $this->request->setMethod('POST');
+        $this->request->addHeader('User-Agent', 'TestAgent');
+        $this->request->addRawPostData('this_is=raw_body');
+
+        $this->request->sendRequest();
+
+        $this->assertStringContainsString('<tr><td class="e">$_POST[\'this_is\']</td><td class="v">raw_body</td></tr>', $this->request->getResponseBody());
+    }
 }

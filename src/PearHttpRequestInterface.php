@@ -20,6 +20,7 @@ interface PearHttpRequestInterface
     public function addQueryString($name, $value, $preencoded = false);
     public function addRawQueryString($querystring, $preencoded = true);
     public function addPostData($name, $value, $preencoded = false);
+    public function addRawPostData($postdata, $preencoded = true);
     public function addFile($inputName, $fileName, $contentType = 'application/octet-stream');
     public function addCookie($name, $value);
     public function sendRequest($saveBody = true);
