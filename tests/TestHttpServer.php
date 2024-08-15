@@ -58,6 +58,8 @@ class TestHttpServer
         if (is_int($this->pid)) {
             if (!posix_kill($this->pid, 15/* SIGTERM */)) {
                 echo "Failed to terminate server with PID {$this->pid}" . PHP_EOL;
+            } else {
+                sleep(1);//waif for server shutdown.
             }
         }
 

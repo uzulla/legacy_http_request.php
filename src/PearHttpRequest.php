@@ -8,9 +8,11 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Cookie\SetCookie;
 use GuzzleHttp\Exception\RequestException;
 use InvalidArgumentException;
+use LogicException;
 
 class PearHttpRequest implements PearHttpRequestInterface
 {
+    /** @var Client  */
     private $client;
     private $response;
     private $url;
@@ -18,11 +20,16 @@ class PearHttpRequest implements PearHttpRequestInterface
     private $headers = [];
     private $queryParams = [];
     private $postData = [];
+    /** @var array */
+    private $options = [];
+    /** @var string */
+    private $basicAuthUsername;
+    /** @var string */
+    private $basicAuthPassword;
     private $body;
 
     public function __construct()
     {
-        $this->client = new Client();
     }
 
     public function setURL($url)
@@ -67,21 +74,32 @@ class PearHttpRequest implements PearHttpRequestInterface
 
     public function sendRequest($saveBody = true)
     {
-        $options = [
+        $this->options = array_merge([
             'headers' => $this->headers,
             'query' => $this->queryParams,
-        ];
+        ], $this->options);
 
         if ($this->method === 'POST' || $this->method === 'PUT') {
             if (!empty($this->postData)) {
-                $options['form_params'] = $this->postData;
-            } elseif ($this->body) {
-                $options['body'] = $this->body;
+                $this->options['form_params'] = $this->postData;
+            } elseif (isset($this->body)) {
+                $this->options['body'] = $this->body;
             }
         }
 
+        if(isset($this->basicAuthUsername)) {
+            $this->options = array_merge([
+                'auth' => [
+                    $this->basicAuthUsername,
+                    $this->basicAuthPassword,
+                    'basic'
+                ]
+            ], $this->options);
+        }
+
         try {
-            $this->response = $this->client->request($this->method, $this->url, $options);
+            $this->client = new Client();
+            $this->response = $this->client->request($this->method, $this->url, $this->options);
             return true;
         } catch (RequestException $e) {
             $this->response = $e->getResponse();
@@ -114,69 +132,33 @@ class PearHttpRequest implements PearHttpRequestInterface
 
     public function setProxy($host, $port = 8080, $user = null, $pass = null)
     {
-        $this->client->setDefaultOption('proxy', [
-            'http' => "tcp://{$host}:{$port}",
-            'https' => "tcp://{$host}:{$port}"
-        ]);
-
-        if ($user !== null && $pass !== null) {
-            $this->client->setDefaultOption('auth', [$user, $pass]);
-        }
+        throw new LogicException('Not implemented yet');
     }
 
     public function setBasicAuth($user, $pass)
     {
-        $this->client->setDefaultOption('auth', [$user, $pass, 'basic']);
+        $this->basicAuthUsername= $user;
+        $this->basicAuthPassword = $pass;
     }
 
     public function setHttpVer($http)
     {
-        if ($http === '1.0') {
-            $this->client->setDefaultOption('version', '1.0');
-        } elseif ($http === '1.1') {
-            $this->client->setDefaultOption('version', '1.1');
-        } else {
-            throw new InvalidArgumentException('Invalid HTTP version. Supported versions are 1.0 and 1.1');
-        }
+        throw new LogicException('Not implemented yet');
     }
 
     public function addRawQueryString($querystring, $preencoded = true)
     {
-        if (!$preencoded) {
-            $querystring = http_build_query($querystring);
-        }
-
-        $currentUri = $this->client->getConfig('base_uri');
-        $newUri = $currentUri->withQuery($currentUri->getQuery() ? $currentUri->getQuery() . '&' . $querystring : $querystring);
-
-        $this->client->setConfig(['base_uri' => $newUri]);
+        throw new LogicException('Not implemented yet');
     }
 
     public function addFile($inputName, $fileName, $contentType = 'application/octet-stream')
     {
-        $this->client->setDefaultOption('multipart', [
-            [
-                'name' => $inputName,
-                'contents' => fopen($fileName, 'r'),
-                'filename' => basename($fileName),
-                'headers' => [
-                    'Content-Type' => $contentType
-                ]
-            ]
-        ]);
+        throw new LogicException('Not implemented yet');
     }
 
     public function addCookie($name, $value)
     {
-        $this->client->setDefaultOption('cookies', function ($cookieJar) use ($name, $value) {
-            $cookieJar->setCookie(new SetCookie([
-                'Name' => $name,
-                'Value' => $value,
-                'Domain' => $this->client->getConfig('base_uri')->getHost(),
-                'Path' => '/',
-            ]));
-            return $cookieJar;
-        });
+        throw new LogicException('Not implemented yet');
     }
 
     public function getResponseReason()
@@ -200,16 +182,16 @@ class PearHttpRequest implements PearHttpRequestInterface
 
     public function disconnect()
     {
-        // TODO: Implement disconnect() method.
+        throw new LogicException('Not implemented yet');
     }
 
     public function attach(&$listener)
     {
-        // TODO: Implement attach() method.
+        throw new LogicException('Not implemented yet');
     }
 
     public function detach(&$listener)
     {
-        // TODO: Implement detach() method.
+        throw new LogicException('Not implemented yet');
     }
 }
