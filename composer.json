@@ -19,11 +19,11 @@
     },
     "type": "library",
     "require-dev": {
-        "phpunit/phpunit": "^8.5.0"
+        "phpunit/phpunit": "^8.5.0",
+        "ext-posix": "*"
     },
     "require": {
         "php": ">=7.2.0",
-        "guzzlehttp/guzzle": "^6.5.0",
-        "ext-posix": "*"
+        "guzzlehttp/guzzle": "^6.5.0"
     }
 }
